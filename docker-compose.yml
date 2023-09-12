@@ -1,0 +1,64 @@
+version: '3.8'
+x-shared-environment: &shared-environment
+  MYSQL_DATABASE: "${DB_NAME:-broker}"
+  MYSQL_ROOT_PASSWORD: "${DB_PWD:-broker}"
+
+services:
+  db:
+    image: mysql:latest
+    cap_add:
+      - SYS_NICE
+    environment:
+      <<: *shared-environment
+    ports:
+        - "3306:3306"
+    volumes:
+        - db_data:/var/lib/mysql
+    networks:
+      - db-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  app:
+    environment:
+      <<: *shared-environment
+    restart: always
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - web-network
+      - db-network
+
+  proxy:
+    image: steveltn/https-portal:1
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - app
+    environment:
+      DOMAINS: 'localhost -> http://app:5005'
+      STAGE: 'local'
+      # FORCE_RENEW: 'true'
+    networks:
+      - web-network
+    depends_on:
+      - app
+    volumes:
+      - proxy_data:/var/lib/https-portal
+
+networks:
+  web-network:
+    driver: bridge
+  db-network:
+    driver: bridge
+
+volumes:
+  db_data:
+    driver: local
+  proxy_data:
+    driver: local
