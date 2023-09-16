@@ -13,7 +13,7 @@ To deploy this project run(make sure you have installed docker and docker-compos
 ```bash
   docker-compose --env-file env.dev up -d
 ```
-
+in browser locate [localhost/](https://localhost/api/v1/schema/swagger-ui) to open api documentation
 
 ## Running Tests
 
