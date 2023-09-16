@@ -1,19 +1,18 @@
 from django.db import transaction
-from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
-from .models import Transaction, Wallet
 
+from .models import Transaction, Wallet
 from .serializers import TransactionSerializer, WalletSerializer
 
 
 class WalletViewSet(viewsets.ModelViewSet):
     queryset = Wallet.objects.all()
     serializer_class = WalletSerializer
-    filterset_fields = ['label']
-    search_fields = ['label']
-    ordering_fields = ['id', 'label', 'balance']
-    ordering = ['id']
-    lookup_field = 'id'
+    filterset_fields = ["label"]
+    search_fields = ["label"]
+    ordering_fields = ["id", "label", "balance"]
+    ordering = ["id"]
+    lookup_field = "id"
 
     @transaction.atomic
     def create(self, request, *args, **kwargs):
@@ -37,11 +36,11 @@ class WalletViewSet(viewsets.ModelViewSet):
 class TransactionViewSet(viewsets.ModelViewSet):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
-    filterset_fields = ['wallet', 'tx_id', 'amount']
-    search_fields = ['wallet__label', 'tx_id', 'amount']
-    ordering_fields = ['id', 'wallet__label', 'tx_id', 'amount']
-    ordering = ['id']
-    lookup_field = 'id'
+    filterset_fields = ["wallet", "tx_id", "amount"]
+    search_fields = ["wallet__label", "tx_id", "amount"]
+    ordering_fields = ["id", "wallet__label", "tx_id", "amount"]
+    ordering = ["id"]
+    lookup_field = "id"
 
     @transaction.atomic
     def create(self, request, *args, **kwargs):

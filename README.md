@@ -1,6 +1,6 @@
 
 # API task
-Test task 
+Test task
 
 
 
@@ -26,4 +26,3 @@ or
 ```bash
 docker exec it <app container name>
 pytest main
-
