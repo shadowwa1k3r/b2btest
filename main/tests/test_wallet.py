@@ -78,7 +78,6 @@ def test_wallet_update(api_client, wallet, transaction_1, transaction_2, transac
         "data": {"type": "Wallet", "id": wallet.id, "attributes": {"label": "test2"}}
     }
     response = api_client.put(url, wallet_data)
-    print(response.content.decode())
     assert response.status_code == status.HTTP_200_OK
     assert Wallet.objects.count() == 1
     assert Wallet.objects.get().label == "test2"
